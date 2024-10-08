@@ -9,9 +9,13 @@
 
 <body onkeyup="handleKey(event)" onload="initGame()">
   <h1>Collect The Balls</h1>
+  <h2 id="collcted-balls"></h2>
+  <h2 id="existing-balls"></h2>
   <table>
     <tbody class="board"></tbody>
   </table>
+  <br><br>
+  <button onclick="restartGame()">Restart Game</button>
   <script src="js/app.js"></script>
   <script src="js/util.js"></script>
 </body>

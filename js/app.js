@@ -8,9 +8,16 @@ var BALL_IMG = '<img src="img/ball.png" />';
 
 var gBoard;
 var gGamerPos;
+var countCollectedBalls;
+var countExistingBalls;
+var timer;
+
+// Initialize the game and render the board on the page
 function initGame() {
 	gGamerPos = { i: 2, j: 9 };
 	gBoard = buildBoard();
+	countCollectedBalls = 0;
+	countExistingBalls = 2;
 	renderBoard(gBoard);
 }
 
@@ -61,18 +68,20 @@ function renderBoard(board) {
 
 			var cellClass = getClassName({ i: i, j: j })
 
-			// TODO - change to short if statement
-			if (currCell.type === FLOOR) cellClass += ' floor';
-			else if (currCell.type === WALL) cellClass += ' wall';
+			//Done
+			cellClass += currCell.type === FLOOR ? ' floor' : currCell.type === WALL ? ' wall' : '';
 
-			//TODO - Change To ES6 template string
-			strHTML += '\t<td class="cell ' + cellClass + '"  onclick="moveTo(' + i + ',' + j + ')" >\n';
+			//Done
+			strHTML += `\t<td class="cell ${cellClass}" onclick="moveTo(${i}, ${j})">\n`;
 
-			// TODO - change to switch case statement
-			if (currCell.gameElement === GAMER) {
-				strHTML += GAMER_IMG;
-			} else if (currCell.gameElement === BALL) {
-				strHTML += BALL_IMG;
+			// Done
+			switch (currCell.gameElement) {
+				case GAMER:
+					strHTML += GAMER_IMG;
+					break;
+				case BALL:
+					strHTML += BALL_IMG;
+					break;
 			}
 
 			strHTML += '\t</td>\n';
@@ -101,6 +110,9 @@ function moveTo(i, j) {
 
 		if (targetCell.gameElement === BALL) {
 			console.log('Collecting!');
+			countCollectedBalls++;
+			countExistingBalls--;
+			renderBallCounters();
 		}
 
 		// MOVING from current position
@@ -159,4 +171,78 @@ function getClassName(location) {
 	console.log('cellClass:', cellClass);
 	return cellClass;
 }
+
+// Add a new ball to the board in empty place (not cell or floor or wall)
+
+function addBall() {
+
+    var emptyCells = [];
+
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            var cell = gBoard[i][j];
+            if (cell.gameElement === null && cell.type === FLOOR) {
+                emptyCells.push({ i: i, j: j });
+            }
+        }
+    }
+
+    if (emptyCells.length > 0) {
+        var randomEmptyCell = emptyCells[getRandomInt(0, emptyCells.length - 1)];
+        gBoard[randomEmptyCell.i][randomEmptyCell.j].gameElement = BALL;
+        renderCell(randomEmptyCell, BALL_IMG);
+		countExistingBalls++;
+		renderBallCounters();
+    }
+
+}
+
+//Return a random integer between min (inclusive) and max (exclusive)
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+//setInterval to add a new ball every 3 seconds
+function setTimeoutAddBall() {
+	timer = setInterval(addBall, 3000);
+}
+
+setTimeoutAddBall();
+
+
+//render the ball counters
+function renderBallCounters() {
+    var elCounterExistingBalls = document.getElementById('existing-balls');
+    elCounterExistingBalls.innerText = 'Existing Balls:'+ countExistingBalls;
+
+    var elCounterCollectedBalls = document.getElementById('collcted-balls');
+    elCounterCollectedBalls.innerText = 'Collected Balls:'+ countCollectedBalls;
+
+	if(checkWinningConditions())
+		winningFunction();
+}
+
+//check winning conditions
+function checkWinningConditions() {
+    return (countExistingBalls === 0);
+}
+
+//winning function
+function winningFunction() {
+	clearInterval(timer);
+	alert('Congratulations, You Win!');
+}
+
+// restart the game
+function restartGame() {
+    initGame();
+	setTimeoutAddBall();
+}
+
+
+
+
+
+
 

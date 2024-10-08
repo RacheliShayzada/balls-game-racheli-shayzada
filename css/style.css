@@ -4,3 +4,23 @@ body {background-color: black; color:white}
 .cell img {width:25px; height:auto}
 .floor {background-color: gray}
 .wall {background-color: rgb(118, 42, 165)}
+
+button {
+    background-color: #800080; /* Purple background */
+    color: white;              /* White text */
+    border: none;              /* No border */
+    border-radius: 5px;       /* Rounded corners */
+    padding: 10px 20px;       /* Padding around the text */
+    font-size: 16px;           /* Font size */
+    cursor: pointer;           /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+button:hover {
+    background-color: #6a0dad; /* Darker purple on hover */
+}
+
+button:active {
+    background-color: #5d0a8e; /* Even darker on click */
+}
+
