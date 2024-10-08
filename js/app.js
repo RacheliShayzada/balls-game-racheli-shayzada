@@ -202,7 +202,6 @@ function getClassName(location) {
 }
 
 // Add a new ball to the board in empty place (not cell or floor or wall)
-
 function addBall() {
 
     var emptyCells = [];
@@ -210,7 +209,8 @@ function addBall() {
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
             var cell = gBoard[i][j];
-            if (cell.gameElement === null && cell.type === FLOOR) {
+            if (cell.gameElement === null && cell.type === FLOOR &&
+                !((i === 4 && j === 0) || (i === 4 && j === 11) || (i === 0 && j === 6) || (i === 9 && j === 6))) {
                 emptyCells.push({ i: i, j: j });
             }
         }
