@@ -53,6 +53,12 @@ function buildBoard() {
 	board[3][8].gameElement = BALL;
 	board[7][4].gameElement = BALL;
 
+	//add holls to the game board
+    board[4][0].type = FLOOR;
+    board[4][11].type = FLOOR;
+    board[0][6].type = FLOOR;
+    board[9][6].type = FLOOR;
+
 	console.log(board);
 	return board;
 }
@@ -123,8 +129,31 @@ function moveTo(i, j) {
 
 		// MOVING to selected position
 		// Model:
-		gGamerPos.i = i;
-		gGamerPos.j = j;
+
+        // Check if the player is moving into a hole
+        switch (`${i},${j}`) {
+            case '4,0': // Left hole
+                gGamerPos.i = 4;
+                gGamerPos.j = 10; // Move to the right side
+                break;
+            case '4,11': // Right hole
+                gGamerPos.i = 4;
+                gGamerPos.j = 1; // Move to the left side
+                break;
+            case '0,6': // Top hole
+                gGamerPos.i = 8; // Move to the bottom
+                gGamerPos.j = 6; // Same column
+                break;
+            case '9,6': // Bottom hole
+                gGamerPos.i = 1; // Move to the top
+                gGamerPos.j = 6; // Same column
+                break;
+            default:
+                // Update the position normally
+                gGamerPos.i = i;
+                gGamerPos.j = j;
+                break;
+        }
 		gBoard[gGamerPos.i][gGamerPos.j].gameElement = GAMER;
 		// DOM:
 		renderCell(gGamerPos, GAMER_IMG);
